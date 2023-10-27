@@ -1,4 +1,4 @@
-# Homework 2: Pumping Lemma, Context Free Languages
+# Homework 3: Turing Machine, Variants, Decidability, and Recognizability
 # CS 212 Nature of Computation, Fall 2023
 
 ---
