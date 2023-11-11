@@ -1,5 +1,5 @@
 \documentclass[addpoints,a4paper]{exam}
-\usepackage{amsmath, amsfonts}
+\usepackage{amsmath, amsfonts, amsthm}
 \usepackage[a4paper]{geometry}
 \usepackage{hyperref}
 
@@ -7,11 +7,19 @@
 \pagestyle{headandfoot}
 \runningheadrule
 \runningfootrule
-\runningheader{CS 212, Fall 2023}{HW 3: Turing Machine, Variants, Decidability, and Recognizability}{Fall 2023}
+\runningheader{CS 212, Fall 2023}{HW 3: Turing Machine, $\ldots$, Recognizability}{Fall 2023}
 \runningfooter{}{Page \thepage\ of \numpages}{}
 \firstpageheader{}{}{}
 
+\newcommand{\blank}{\textvisiblespace}
+
 \boxedpoints
+
+\usepackage{draftwatermark}
+\SetWatermarkText{Sample Solution}
+\SetWatermarkScale{3}
+\SetWatermarkLightness{0.85}
+\printanswers
 
 \title{Homework 3: Turing Machine, Variants, Decidability, and Recognizability}
 \author{CS 212 Nature of Computation\\Habib University}
@@ -33,16 +41,61 @@ Consider the Turing machine, $M$, that computes $f$ given a $\#$-separated pair 
 
 \begin{parts}
   \part[5] Give a high-level description of $M$.
+    \begin{solution}
+      On input $a\#b$:
+      \begin{itemize}
+      \item for $i$ in $1$ to $n$:
+        \begin{itemize}
+        \item Read $a_i$ and replace it with \blank
+        \item Replace $b_i$ with $a_i\triangle b_i$
+        \end{itemize}
+      \end{itemize}
+      We make the usual assumption that the Turing machine first checks the input string and \textit{rejects} if it is of incorrect format.
+    \end{solution}
   \part[5] Explore the website, \url{https://turingmachine.io}, in order to write a formal description of $M$ on it. Download the description from the website and submit the downloaded YAML file along with the eventual PDF.
   \end{parts}
 
 \question [10] An $\textit{Euclidean-Space}$ Turing machine has the usual finite-state control but a tape that extends in a three-dimensional grid of cells, infinite in all directions. Both the head and the first input symbol are initially placed at a cell designated as the origin. Each consecutive input symbol is in one of the six neighboring cells and does not overwrite a previous symbol. The head can move in one transition to any of the six neighboring cells. All other workings of the Turing machine are as usual.
 
   Provide a formal description of the \textit{Euclidean-Space} Turing Machine and prove that it is equivalent to an ordinary Turing machine. Recall that two models are equivalent if each can simulate the other.
+
+  \begin{solution}
+
+    An Euclidean-Space Turing Machine can be formally represented as the usual 7-tuple, $(Q, \Sigma, \Gamma, \delta, q_{start}, q_{accept}, q_{reject})$, of an ordinary Turing machine.
+
+    The only exception is $\delta$ which is now defined as $\delta: Q\times\Gamma\to Q \times \{L,R,U,D,F,B\}$, as the head can move Left, Right, Up, Down, Forward, or Back in a single movement.
+
+    \centerline {\rule{350pt}{.25pt}}
+    
+    We prove that every Euclidean-Space Turing Machine can be simulated using an ordinary Turing Machine. The main challenge is to map a 3D grid onto a 1D tape, while ensuring that each cell is only mapped once. We provide a possible mapping below.
+
+    It considers the 3D tape as a grid and proceeds with concentric layers in the grid. The origin is at the center and serves as the first layer. Each layer thereon comprises the six faces in the grid circumscribing (and touching) the previous layer. The diagram below shows three of the six faces in the second layer. This layer circumscribes the first layer, i.e. the origin.
+
+    \begin{proof}
+      The origin of the 3D tape of the Euclidean-Space Turing Machine is mapped to the first cell of the 1D tape of the ordinary Turing Machine. Then the six faces of the first layer are mapped in a deterministic way. For this proof, let’s fix it such that the top, then the bottom, right, left, front and back faces are mapped one after the other in that order, while ensuring that each cell is mapped once only. Each face is mapped starting from its top left cell, and moving left to right, and then top to bottom. The following figure shows the mapping up until the right face.
+    
+    \includegraphics[width=\textwidth]{3dtape}
+
+    Once the six faces of the first layer are mapped, we map the six faces of the next layer using the same scheme,  and so on, probing the next layer once each layer is fully mapped.
+    
+This is a bijective mapping between the 3D grid and the 1D tape, i.e. any cell of the 3D grid has a corresponding numeric index in the 1D tape, based on which all workings of the Euclidean-Space Turing Machine can be ported over to an ordinary Turing Machine.
+\end{proof}
+\end{solution}
   
 \question [10] Let $A = \{L \mid L\text{ is decidable but not context-free}\}$. Prove that every element of $A$ contains an unrecognizable subset.
 
-
+  \begin{solution}
+    Our proof proceeds by showing that any element of $A$ has more subsets than the number of recognizable languages.
+    \begin{proof}
+      $A$ is a set of languages. The definition implies that all its member languages are infinite.\\
+      As a set of strings of finite length, an infinite language is countably infinite.\\
+      Consider a language, $L\in A$. $L$ is countably infinite.\\
+      All subsets of $L$ are languages and are contained in its powerset, $P(L)$.\\
+      $P(L)$ has greater cardinality than $L$. That is, $P(L)$ is uncountably infinite.\\
+      The set of Turing machines, hence the set of recognizable languages, is countably infinite. (see proof of Corollary 4.18 in the book)\\
+      Therefore, $P(L)$ contains languages that are not recognizable.
+    \end{proof}
+  \end{solution}
 \end{questions}
 
 \end{document}
