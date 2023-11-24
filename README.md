@@ -22,7 +22,7 @@ For this assignment, you should
 
 # The Problem Set
 
-The problems are in `hw2.tex` which is to be compiled using a LaTeX compiler.
+The problems are in `hw3.tex` which is to be compiled using a LaTeX compiler.
 
 # Submission and Grading
 
